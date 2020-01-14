@@ -7,6 +7,7 @@ import com.jzh.cq.event.message.CQGroupMessageEvent;
 import com.jzh.cq.robot.CQPlugin;
 import com.jzh.cq.robot.CoolQ;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +22,7 @@ import javax.annotation.PostConstruct;
  * @date 2020/1/13 15:06
  */
 @Component
+@Order(value = 5)
 public class HeroPlugin extends CQPlugin {
 
     @Autowired

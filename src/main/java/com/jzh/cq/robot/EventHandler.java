@@ -2,8 +2,8 @@ package com.jzh.cq.robot;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jzh.cq.event.notice.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.jzh.bot.plugin.PluginConfig;
 import com.jzh.cq.event.message.CQDiscussMessageEvent;
 import com.jzh.cq.event.message.CQGroupMessageEvent;
 import com.jzh.cq.event.message.CQPrivateMessageEvent;
@@ -12,11 +12,14 @@ import com.jzh.cq.event.notice.*;
 import com.jzh.cq.event.request.CQFriendRequestEvent;
 import com.jzh.cq.event.request.CQGroupRequestEvent;
 
+
 @Service
-class EventHandler {
+public class EventHandler {
 
+    @Autowired
+    private CQPlugin[] pluginList;
 
-    static void handle(CoolQ cq, JSONObject eventJson) {
+    public void handle(CoolQ cq, JSONObject eventJson) {
         System.out.println(eventJson);
         String postType = eventJson.getString("post_type");
         switch (postType) {
@@ -39,12 +42,12 @@ class EventHandler {
         }
     }
 
-    private static void handleMessage(CoolQ cq, JSONObject eventJson) {
+    private void handleMessage(CoolQ cq, JSONObject eventJson) {
         String messageType = eventJson.getString("message_type");
         switch (messageType) {
             case "private": {
                 CQPrivateMessageEvent event = eventJson.toJavaObject(CQPrivateMessageEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onPrivateMessage(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -52,7 +55,7 @@ class EventHandler {
             }
             case "group": {
                 CQGroupMessageEvent event = eventJson.toJavaObject(CQGroupMessageEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onGroupMessage(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -60,7 +63,7 @@ class EventHandler {
             }
             case "discuss": {
                 CQDiscussMessageEvent event = eventJson.toJavaObject(CQDiscussMessageEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onDiscussMessage(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -70,14 +73,14 @@ class EventHandler {
 
     }
 
-    private static void handleNotice(CoolQ cq, JSONObject eventJson) {
+    private void handleNotice(CoolQ cq, JSONObject eventJson) {
 
         String noticeType = eventJson.getString("notice_type");
 
         switch (noticeType) {
             case "group_upload": {
                 CQGroupUploadNoticeEvent event = eventJson.toJavaObject(CQGroupUploadNoticeEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onGroupUploadNotice(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -85,7 +88,7 @@ class EventHandler {
             }
             case "group_admin": {
                 CQGroupAdminNoticeEvent event = eventJson.toJavaObject(CQGroupAdminNoticeEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onGroupAdminNotice(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -93,7 +96,7 @@ class EventHandler {
             }
             case "group_decrease": {
                 CQGroupDecreaseNoticeEvent event = eventJson.toJavaObject(CQGroupDecreaseNoticeEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onGroupDecreaseNotice(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -101,7 +104,7 @@ class EventHandler {
             }
             case "group_increase": {
                 CQGroupIncreaseNoticeEvent event = eventJson.toJavaObject(CQGroupIncreaseNoticeEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onGroupIncreaseNotice(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -109,7 +112,7 @@ class EventHandler {
             }
             case "group_ban": {
                 CQGroupBanNoticeEvent event = eventJson.toJavaObject(CQGroupBanNoticeEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onGroupBanNotice(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -117,7 +120,7 @@ class EventHandler {
             }
             case "friend_add": {
                 CQFriendAddNoticeEvent event = eventJson.toJavaObject(CQFriendAddNoticeEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onFriendAddNotice(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -128,12 +131,12 @@ class EventHandler {
 
     }
 
-    private static void handleRequest(CoolQ cq, JSONObject eventJson) {
+    private void handleRequest(CoolQ cq, JSONObject eventJson) {
         String requestType = eventJson.getString("request_type");
         switch (requestType) {
             case "friend": {
                 CQFriendRequestEvent event = eventJson.toJavaObject(CQFriendRequestEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onFriendRequest(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -141,7 +144,7 @@ class EventHandler {
             }
             case "group": {
                 CQGroupRequestEvent event = eventJson.toJavaObject(CQGroupRequestEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onGroupRequest(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }
@@ -150,12 +153,12 @@ class EventHandler {
         }
     }
 
-    private static void handleMeta(CoolQ cq, JSONObject eventJson) {
+    private void handleMeta(CoolQ cq, JSONObject eventJson) {
         String metaType = eventJson.getString("meta_event_type");
         switch (metaType) {
             case "heartbeat": {
                 CQHeartBeatEvent event = eventJson.toJavaObject(CQHeartBeatEvent.class);
-                for (CQPlugin plugin : PluginConfig.pluginList) {
+                for (CQPlugin plugin : pluginList) {
                     if (plugin.onHeartBeatMeta(cq, event) == CQPlugin.MESSAGE_BLOCK)
                         break;
                 }

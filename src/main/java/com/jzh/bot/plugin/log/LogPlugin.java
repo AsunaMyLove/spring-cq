@@ -10,8 +10,12 @@ import com.jzh.cq.event.request.CQFriendRequestEvent;
 import com.jzh.cq.event.request.CQGroupRequestEvent;
 import com.jzh.cq.robot.CQPlugin;
 import com.jzh.cq.robot.CoolQ;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 // 这个插件用于记录日志
+@Component
+@Order(value = 2)
 public class LogPlugin extends CQPlugin {
 
     private Logger logger = LoggerFactory.getLogger(LogPlugin.class);

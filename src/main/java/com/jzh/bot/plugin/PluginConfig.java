@@ -6,11 +6,14 @@ import com.jzh.bot.plugin.prefix.PrefixPlugin;
 import com.jzh.bot.plugin.status.StatusPlugin;
 import com.jzh.bot.plugin.say.SayPlugin;
 import com.jzh.cq.robot.CQPlugin;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PluginConfig {
+
     public static List<CQPlugin> pluginList = new ArrayList<>();
 
     static {

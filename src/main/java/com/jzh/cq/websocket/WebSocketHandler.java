@@ -5,15 +5,20 @@ import com.alibaba.fastjson.JSONObject;
 import com.jzh.cq.robot.CoolQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.jzh.cq.Global;
 
-
+@Component
 public class WebSocketHandler extends TextWebSocketHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private CoolQ coolQ;
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
@@ -33,7 +38,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) {
         long xSelfId = Long.valueOf(session.getHandshakeHeaders().get("x-self-id").get(0));
         logger.info("{} connected", xSelfId);
-        Global.robots.putIfAbsent(xSelfId, new CoolQ(xSelfId));
+        coolQ.setSelfId(xSelfId);
+        Global.robots.putIfAbsent(xSelfId, coolQ);
         CoolQ robot = Global.robots.get(xSelfId);
         robot.setSelfId(xSelfId);
         robot.setBotSession(session);

@@ -5,7 +5,11 @@ import org.slf4j.LoggerFactory;
 import com.jzh.cq.event.meta.CQHeartBeatEvent;
 import com.jzh.cq.robot.CQPlugin;
 import com.jzh.cq.robot.CoolQ;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
+@Component
+@Order(value = 1)
 public class StatusPlugin extends CQPlugin {
     private Logger logger = LoggerFactory.getLogger(StatusPlugin.class);
     @Override

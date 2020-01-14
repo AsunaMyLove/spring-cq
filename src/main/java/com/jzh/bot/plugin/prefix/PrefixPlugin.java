@@ -4,8 +4,12 @@ import com.jzh.cq.event.message.CQGroupMessageEvent;
 import com.jzh.cq.event.message.CQPrivateMessageEvent;
 import com.jzh.cq.robot.CQPlugin;
 import com.jzh.cq.robot.CoolQ;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 // 这个插件用于预处理消息，如指令前缀
+@Component
+@Order(value = 3)
 public class PrefixPlugin extends CQPlugin {
     // 指令前缀 /
     private String prefix = "/";

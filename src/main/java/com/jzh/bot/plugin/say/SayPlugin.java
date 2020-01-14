@@ -4,8 +4,12 @@ import com.jzh.cq.event.message.CQGroupMessageEvent;
 import com.jzh.cq.event.message.CQPrivateMessageEvent;
 import com.jzh.cq.robot.CQPlugin;
 import com.jzh.cq.robot.CoolQ;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 
+@Component
+@Order(value = 4)
 public class SayPlugin extends CQPlugin {
     @Override
     public int onPrivateMessage(CoolQ cq, CQPrivateMessageEvent event) {

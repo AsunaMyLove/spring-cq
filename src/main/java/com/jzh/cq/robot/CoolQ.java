@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 import com.jzh.cq.entity.CQStatus;
 import com.jzh.cq.retdata.*;
@@ -15,6 +17,7 @@ import com.jzh.cq.retdata.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class CoolQ {
 
     @Getter
@@ -25,12 +28,18 @@ public class CoolQ {
     @Setter
     private WebSocketSession botSession;
 
+    @Autowired
+    private EventHandler handler;
+
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private int apiEcho = 0;//用于标记是哪次发送api，接受时作为key放入apiResponseMap
 
     private Map<String, ApiSender> apiCallbackMap = new HashMap<>();//用于存放api调用，收到响应时put，处理完成remove
+
+    public CoolQ() {
+    }
 
     public CoolQ(long selfId) {
         this.selfId = selfId;
@@ -64,7 +73,7 @@ public class CoolQ {
 
     public void onReceiveEventMessage(JSONObject message) {
         logger.debug(selfId + " RECV Event {}", message);
-        new Thread(() -> EventHandler.handle(CoolQ.this, message)).start();
+        new Thread(() -> handler.handle(CoolQ.this, message)).start();
     }
 
 
