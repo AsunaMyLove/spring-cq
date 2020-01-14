@@ -28,20 +28,13 @@ public class HeroPlugin extends CQPlugin {
     @Autowired
     private S300Report s300Report;
 
-    private static HeroPlugin  heroPlugin ;
-    @PostConstruct
-    public void init() {
-        heroPlugin = this;
-        heroPlugin.s300Report = this.s300Report;
-    }
-
     @Override
     public int onGroupMessage(CoolQ cq, CQGroupMessageEvent event) {
         String report = "";
         String msg = event.getMessage();
         if(msg.matches("查询战绩=(.*)")){
             try {
-                report = heroPlugin.s300Report.getListByName(msg.split("=")[1]);
+                report = s300Report.getListByName(msg.split("=")[1]);
             } catch (Exception e) {
                 e.printStackTrace();
                 report = "找不到角色信息!";
@@ -49,7 +42,7 @@ public class HeroPlugin extends CQPlugin {
         }
         if(msg.matches("查询比赛=(.*)")){
             try {
-                report = heroPlugin.s300Report.getMatchById(msg.split("=")[1]);
+                report = s300Report.getMatchById(msg.split("=")[1]);
             } catch (Exception e) {
                 e.printStackTrace();
                 report = "找不到比赛信息!";
