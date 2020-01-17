@@ -1,4 +1,4 @@
-package com.jzh.bot.plugin.heros.util;
+package com.jzh.bot.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Component;
  * @author jzh
  * @version V1.0.0
  * @company lhfinance.com
- * @package com.jzh.bot.plugin.heros.util
+ * @package com.jzh.bot.util
  * @className: SpringUtil
- * @description: TODO
+ * @description: springContext工具类
  * @date 2020/1/13 16:08
  */
 @Component

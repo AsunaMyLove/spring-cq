@@ -1,6 +1,7 @@
-package com.jzh.bot.entity.heros;
+package com.jzh.bot.plugin.heros.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -13,6 +14,7 @@ import lombok.Data;
  * @date 2020/1/8 15:46
  */
 @Data
+@TableName("TY_HERO")
 public class Hero {
 
     private Integer id;

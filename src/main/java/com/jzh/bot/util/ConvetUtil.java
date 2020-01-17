@@ -1,7 +1,7 @@
-package com.jzh.bot.plugin.heros.util;
+package com.jzh.bot.util;
 
-import com.jzh.bot.entity.heros.Info;
-import com.jzh.bot.entity.heros.MatchInfo;
+import com.jzh.bot.plugin.heros.entity.Info;
+import com.jzh.bot.plugin.heros.entity.MatchInfo;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @company lhfinance.com
  * @package com.jzh.util
  * @className: ConvetUtil
- * @description: TODO
+ * @description: 转换工具类
  * @date 2020/1/6 20:05
  */
 public class ConvetUtil {

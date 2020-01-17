@@ -1,4 +1,4 @@
-package com.jzh.bot.service;
+package com.jzh.bot.plugin.heros.service;
 
 /**
  * @author jzh
@@ -29,5 +29,5 @@ public interface S300Report {
      * 更新英雄列表
      * @return
      */
-//    int updateHeroList();
+    int updateHeroList();
 }

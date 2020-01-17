@@ -1,22 +1,25 @@
-package com.jzh.bot.service.impl;
+package com.jzh.bot.plugin.heros.service.impl;
 
-import com.jzh.bot.entity.heros.Info;
-import com.jzh.bot.entity.heros.Match;
-import com.jzh.bot.entity.heros.MatchInfo;
+import com.jzh.bot.plugin.heros.entity.Hero;
+import com.jzh.bot.plugin.heros.entity.Info;
+import com.jzh.bot.plugin.heros.entity.Match;
+import com.jzh.bot.plugin.heros.entity.MatchInfo;
 import com.jzh.bot.plugin.heros.common.UrlConstants;
-import com.jzh.bot.plugin.heros.util.ConvetUtil;
-import com.jzh.bot.plugin.heros.util.FormatUtil;
-import com.jzh.bot.service.S300Report;
-import org.jsoup.Jsoup;
+import com.jzh.bot.plugin.heros.mapper.HeroMapper;
+import com.jzh.bot.plugin.heros.service.S300Report;
+import com.jzh.bot.util.ConvetUtil;
+import com.jzh.bot.util.FormatUtil;
+import com.jzh.bot.util.HttpUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author jzh
@@ -30,9 +33,14 @@ import java.util.List;
 @Service
 public class S300ReportImpl implements S300Report {
 
+    private Logger logger = LoggerFactory.getLogger(S300ReportImpl.class);
+
+    @Autowired
+    private HttpUtil httpUtil;
+
     @Override
     public String getListByName(String name) {
-        Document doc = connect(UrlConstants.LIST+name);
+        Document doc = httpUtil.connect(UrlConstants.LIST+name);
 
         Elements elements2 = doc.getElementsByClass("datatable");
         int index = 1;
@@ -58,7 +66,7 @@ public class S300ReportImpl implements S300Report {
 
     @Override
     public String getMatchById(String id) {
-        Document doc = connect(UrlConstants.MATCH+id);
+        Document doc = httpUtil.connect(UrlConstants.MATCH+id);
 
         Elements elements1 = doc.getElementsByClass("datamsg");
 
@@ -101,13 +109,37 @@ public class S300ReportImpl implements S300Report {
         return match.toString();
     }
 
+    @Autowired
+    private HeroMapper heroMapper;
+    @Value("${heroListStart}")
+    private int heroListStart = 0;
+    @Value("${heroListEnd}")
+    private int heroListEnd = 300;
 
-    private Document connect(String url) {
-        try {
-            return Jsoup.connect(url).timeout(5000).get();
-        } catch (IOException e) {
-            connect(url);
+    @Override
+    public int updateHeroList() {
+        //获取当前所有
+        List<Hero> list = heroMapper.selectByMap(new HashMap<>());
+        logger.info("当前库中的英雄数量:{}",list.size());
+
+        for (int i = heroListStart; i < heroListEnd; i++) {
+            Document doc = httpUtil.connect(UrlConstants.GET_HERO_BY_RANK.replaceAll("##type##",i+""));
+            String name = doc.select(UrlConstants.GET_HERO_NAME_SELECTOR).text();
+            if("战绩查询".equals(name)){
+                continue;
+            }
+            name = name.replace("本命排行","");
+            Hero h = new Hero();
+            h.setId(i);
+            h.setName(name);
+            if(!list.contains(h)){
+                logger.info("新加的英雄:{}",h.toString());
+                heroMapper.insert(h);
+            }
         }
-        return null;
+
+        return 0;
     }
+
+
 }

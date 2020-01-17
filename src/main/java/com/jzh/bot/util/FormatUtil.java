@@ -1,6 +1,6 @@
-package com.jzh.bot.plugin.heros.util;
+package com.jzh.bot.util;
 
-import com.jzh.bot.entity.heros.Info;
+import com.jzh.bot.plugin.heros.entity.Info;
 
 import java.util.List;
 

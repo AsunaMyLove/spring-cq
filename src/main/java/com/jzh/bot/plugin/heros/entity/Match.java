@@ -1,4 +1,4 @@
-package com.jzh.bot.entity.heros;
+package com.jzh.bot.plugin.heros.entity;
 
 import lombok.Data;
 

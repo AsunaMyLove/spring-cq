@@ -2,6 +2,8 @@ package com.jzh.cq.robot;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jzh.cq.event.notice.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jzh.cq.event.message.CQDiscussMessageEvent;
@@ -16,11 +18,13 @@ import com.jzh.cq.event.request.CQGroupRequestEvent;
 @Service
 public class EventHandler {
 
+    private Logger logger = LoggerFactory.getLogger(EventHandler.class);
+
     @Autowired
     private CQPlugin[] pluginList;
 
     public void handle(CoolQ cq, JSONObject eventJson) {
-        System.out.println(eventJson);
+        logger.info(eventJson.toJSONString());
         String postType = eventJson.getString("post_type");
         switch (postType) {
             case "message": {
