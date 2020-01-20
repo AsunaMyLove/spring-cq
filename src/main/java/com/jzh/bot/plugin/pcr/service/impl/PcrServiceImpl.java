@@ -1,5 +1,6 @@
 package com.jzh.bot.plugin.pcr.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.jzh.bot.plugin.pcr.common.PcrUrl;
 import com.jzh.bot.plugin.pcr.entity.CharacterRank;
 import com.jzh.bot.plugin.pcr.mapper.CharacterRankMapper;
@@ -12,8 +13,13 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 /**
@@ -57,9 +63,10 @@ public class PcrServiceImpl implements PcrService {
                     character.setId(href.substring(href.lastIndexOf("/")+1,href.length()));
                     String name = a.text();
                     character.setName(name);
-                    character.setChineseName(translateUtil.translate(name,"jp","zh"));
+//                    character.setChineseName(translateUtil.translate(name,"jp","zh"));
                     String imgUrl = a.getElementsByTag("img").get(0).attr("data-original");
                     character.setImgUrl(imgUrl);
+                    getNickname(character);
                     if(ids.contains(character.getId())){
                         logger.info("更新的角色:{}",character);
                         characterRankMapper.updateById(character);
@@ -69,6 +76,29 @@ public class PcrServiceImpl implements PcrService {
                     }
                 }
             }
+        }
+    }
+
+
+    @Value("${pcr.nickName}")
+    private String nickFileName;
+
+    private void getNickname(CharacterRank cr) {
+        try {
+            InputStream path = this.getClass().getResourceAsStream(nickFileName);
+            BufferedReader br = new BufferedReader(new InputStreamReader(path));
+            String line = br.readLine();
+            JSONArray ja = JSONArray.parseArray(line);
+            List<CharacterRank> crs = ja.toJavaList(CharacterRank.class);
+            for (CharacterRank c:crs) {
+                if(c.getName().equals(cr.getName())){
+                    cr.setChineseName(c.getChineseName());
+                    cr.setNickName(c.getNickName());
+                }
+            }
+        } catch (IOException e) {
+            logger.error("PcrServiceImpl.getNickname error:{}",e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -88,7 +118,7 @@ public class PcrServiceImpl implements PcrService {
         List<CharacterRank> list = characterRankMapper.selectByRank(rank);
         StringBuilder sb = new StringBuilder();
         for (CharacterRank cr:list) {
-            sb.append(cr.getName()).append(",");
+            sb.append(cr.getNickName().split(",")[0]).append(",");
         }
         return sb.toString();
     }

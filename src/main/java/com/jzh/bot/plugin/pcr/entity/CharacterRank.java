@@ -26,5 +26,12 @@ public class CharacterRank {
     private String chineseName;
     private String nickName;
 
+    public CharacterRank() {
+    }
 
+    public CharacterRank(String name, String chineseName, String nickName) {
+        this.name = name;
+        this.chineseName = chineseName;
+        this.nickName = nickName;
+    }
 }

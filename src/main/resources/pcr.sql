@@ -7,6 +7,7 @@ CREATE TABLE `PCR_CHARACTER_RANK` (
   `rank` varchar(5),
   `url` varchar(100),
   `img_url` varchar(100),
+  `nick_name` varchar(100),
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

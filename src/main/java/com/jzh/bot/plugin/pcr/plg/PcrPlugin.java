@@ -37,6 +37,9 @@ public class PcrPlugin extends CQPlugin {
         if(msg.matches("pcr查询rank=(.*)")){
             try {
                 report = pcrService.recommendRank(msg.split("=")[1]);
+                if("".equals(report)){
+                    report = "该rank没有推荐角色";
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 report = "找不到角色信息!";
